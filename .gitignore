@@ -1,0 +1,6 @@
+**/.venv/**
+known_faces/*
+!known_faces/.gitkeep
+
+known_voices/*
+!known_voices/.gitkeep

@@ -1,0 +1,118 @@
+<!-- <!DOCTYPE html> -->
+<!-- <html lang="en"> -->
+<!-- <head> -->
+<!--   <meta charset="UTF-8"> -->
+<!--   <title>WebRTC Client</title> -->
+<!-- </head> -->
+<!-- <body> -->
+<!--   <video id="localVideo" autoplay playsinline></video> -->
+<!---->
+<!--   <script> -->
+<!--     const SIGNALING_SERVER = "https://dev.shreyanshpande.work/offer"; -->
+<!---->
+<!--     async function startWebRTC() { -->
+<!--       // Create RTCPeerConnection with Google STUN server -->
+<!--       const pc = new RTCPeerConnection({ -->
+<!--         iceServers: [{ urls: "stun:stun.l.google.com:19302" }] -->
+<!--       }); -->
+<!---->
+<!--       // Get access to webcam -->
+<!--       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); -->
+<!--       const videoElement = document.getElementById("localVideo"); -->
+<!--       videoElement.srcObject = stream; -->
+<!---->
+<!--       // Add all tracks from local stream to peer connection -->
+<!--       stream.getTracks().forEach(track => pc.addTrack(track, stream)); -->
+<!---->
+<!--       // Create an SDP offer -->
+<!--       const offer = await pc.createOffer(); -->
+<!--       await pc.setLocalDescription(offer); -->
+<!---->
+<!--       // Send the offer to your signaling server -->
+<!--       const response = await fetch(SIGNALING_SERVER, { -->
+<!--         method: "POST", -->
+<!--         headers: { "Content-Type": "application/json" }, -->
+<!--         body: JSON.stringify({ -->
+<!--           sdp: pc.localDescription.sdp, -->
+<!--           type: pc.localDescription.type -->
+<!--         }) -->
+<!--       }); -->
+<!---->
+<!--       // Parse server’s SDP answer -->
+<!--       const answer = await response.json(); -->
+<!---->
+<!--       // Set remote description -->
+<!--       await pc.setRemoteDescription(new RTCSessionDescription({ -->
+<!--         type: answer.type, -->
+<!--         sdp: answer.sdp -->
+<!--       })); -->
+<!---->
+<!--       console.log("WebRTC connection established!"); -->
+<!--     } -->
+<!---->
+<!--     startWebRTC().catch(console.error); -->
+<!--   </script> -->
+<!-- </body> -->
+<!-- </html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebRTC Client (Video + Audio)</title>
+</head>
+<body>
+  <video id="localVideo" autoplay playsinline muted></video>
+
+  <script>
+    // const SIGNALING_SERVER = "https://dev.shreyanshpande.work/offer";
+    const SIGNALING_SERVER = "http://localhost:8000/offer"
+
+    async function startWebRTC() {
+      // Create RTCPeerConnection with Google STUN server
+      const pc = new RTCPeerConnection({
+        iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+      });
+
+      // Get access to webcam AND microphone
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true   // <-- enable audio here
+      });
+
+      // Show local preview (muted to avoid feedback)
+      const videoElement = document.getElementById("localVideo");
+      videoElement.srcObject = stream;
+
+      // Add all tracks (video + audio) to peer connection
+      stream.getTracks().forEach(track => pc.addTrack(track, stream));
+
+      // Create SDP offer
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      // Send offer to signaling server
+      const response = await fetch(SIGNALING_SERVER, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sdp: pc.localDescription.sdp,
+          type: pc.localDescription.type
+        })
+      });
+
+      // Parse and set remote description (answer)
+      const answer = await response.json();
+      await pc.setRemoteDescription(new RTCSessionDescription({
+        type: answer.type,
+        sdp: answer.sdp
+      }));
+
+      console.log("✅ WebRTC connection established with audio + video!");
+    }
+
+    startWebRTC().catch(console.error);
+  </script>
+</body>
+</html>
+
