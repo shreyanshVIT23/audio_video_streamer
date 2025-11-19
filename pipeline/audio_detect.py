@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 from faster_whisper import WhisperModel
 from pyannote.core import Segment
 import whisper
@@ -14,6 +15,13 @@ import soundfile as sf
 import librosa
 from espnet2.bin.asr_inference import Speech2Text
 
+"""
+It is best to use faster whisper or openai whisper as they are far superior compared to others.
+Technically faster whisper should as its name suggests be faster than openai whisper but according to the test in this page
+the output is somewhat different in my laptop so others can check and see if its better in theirs.
+I am only using cpu but it should run far faster in a gpu i believe
+"""
+
 
 class AudioRecognizer:
     def __init__(self) -> None:
@@ -26,7 +34,9 @@ class AudioRecognizer:
     def faster_whisper_load(self, model="small", device="cpu", compute_type="int8"):
         return WhisperModel(model, device, compute_type=compute_type)
 
-    def fast_whisper_model(self, path_to_audio, segment: Segment | None) -> str:
+    def fast_whisper_model(
+        self, path_to_audio, segment: Segment | None | List[float]
+    ) -> str:
         if self.faster_whisper is None:
             self.faster_whisper = self.faster_whisper_load()
         model = self.faster_whisper
@@ -34,6 +44,8 @@ class AudioRecognizer:
             segments, _ = model.transcribe(
                 path_to_audio, beam_size=5, clip_timestamps=[segment.start, segment.end]
             )
+        elif isinstance(segment, list):
+            segments, _ = model.transcribe(audio=path_to_audio, clip_timestamps=segment)
         else:
             segments, _ = model.transcribe(path_to_audio, beam_size=5)
         return " ".join(segment.text for segment in segments)
@@ -175,7 +187,10 @@ class AudioRecognizer:
         # Prepare input
         audio = waveform.squeeze().numpy()
         inputs = processor(
-            audio, sampling_rate=16000, return_tensors="pt", padding=True
+            audio,
+            sampling_rate=16000,  # type:ignore
+            return_tensors="pt",  # type:ignore
+            padding=True,  # type:ignore
         )
 
         # Transcribe
@@ -196,7 +211,7 @@ class AudioRecognizer:
     ):
         d = ModelDownloader()
         speech2text = Speech2Text(
-            **d.download_and_unpack(tag),
+            **d.download_and_unpack(tag),  # type: ignore
             device="cuda" if torch.cuda.is_available() else "cpu",
             minlenratio=0.0,
             maxlenratio=0.0,
@@ -252,7 +267,7 @@ class AudioRecognizer:
 
 if __name__ == "__main__":
     ar = AudioRecognizer()
-    path_to_audio = str(Path("./audio.wav"))
+    path_to_audio = str(Path("./test_data/audio.wav"))
     models = {
         "ESP2NET": ar.esp2net_model,
         "FAST WHISPER": ar.fast_whisper_model,

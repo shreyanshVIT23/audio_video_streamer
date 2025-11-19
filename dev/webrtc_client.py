@@ -1,5 +1,6 @@
 import asyncio
 import json
+from pathlib import Path
 from aiortc import (
     RTCPeerConnection,
     RTCSessionDescription,
@@ -24,7 +25,8 @@ async def client_request():
     player = MediaPlayer(
         "/dev/video0", format="v4l2", options={"video_size": "640x480"}
     )
-    mic = MediaPlayer("./2 people conversation.opus")
+    audio_path = Path("./test_data/2 people conversation.opus")
+    mic = MediaPlayer(str(audio_path))
     pc.addTrack(player.video)
     pc.addTrack(mic.audio)
 

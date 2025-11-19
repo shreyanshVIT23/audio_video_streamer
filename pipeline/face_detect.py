@@ -43,7 +43,7 @@ def suppress_stdout():
             sys.stdout = old_stdout
 
 
-THRESHOLD = VIDEO_THRESHOLD
+# THRESHOLD = VIDEO_THRESHOLD
 DB_PATH = VIDEO_DB_PATH
 
 
@@ -193,18 +193,22 @@ def save_new_person_pyav(frame: VideoFrame):
 if __name__ == "__main__":
     # person = asyncio.run(find_person("./test1.jpg"))
     # print(person)
-    faces = asyncio.run(
-        extract_faces("/home/shreyanshp/Projects/Dymensia/pipeline/test1.jpg")
-    )
+    image = Path("./test_data/test.jpg")
+    # faces = asyncio.run(
+    #     # extract_faces("/home/shreyanshp/Projects/Dymensia/pipeline/test1.jpg")
+    #     extract_faces(str(image))
+    # )
+    faces = extract_faces(str(image))
     for cropped_face in faces:
         cv2.imshow("face", cropped_face)
         # print(f"cropped face np array: {face['face']}")
         while cv2.waitKey(1) & 0xFF != ord("q"):
             continue
-        persons: List[DataFrame] = asyncio.run(find_person(cropped_face))  # type: ignore
+        # persons: List[DataFrame] = asyncio.run(find_person(cropped_face))  # type: ignore
+        persons: List[DataFrame] = find_person(cropped_face)  # type:ignore
         print(type(persons[0]))
         for person in persons:
-            print(f"Detected persons: {type(person['identity'])}")
+            print(f"Detected persons: {person['identity']}")
             name = ""
             if person.empty:
                 name = save_new_person_pyav(
@@ -212,7 +216,7 @@ if __name__ == "__main__":
                         (cropped_face * 255).astype("uint8"), format="rgb24"
                     )
                 )
-            print(Path(person["identity"].iloc[0]).parent.name)
+            # print(Path(person["identity"].iloc[0]).parent.name)
     # print(asyncio.run(find_person(faces)))
     # print(person[0].columns)
     # if person[0].empty:

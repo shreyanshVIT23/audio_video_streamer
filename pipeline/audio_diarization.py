@@ -8,6 +8,7 @@ be tuned by adjusting the THRESHOLD parameter.
 """
 
 import asyncio
+from pathlib import Path
 import numpy as np
 from pyannote.audio import Inference, Model, Pipeline
 from pyannote.audio.pipelines import VoiceActivityDetection
@@ -281,9 +282,8 @@ def run_async_gen_in_thread(async_gen_func, *args, **kwargs):
 
 
 if __name__ == "__main__":
-    for segment, name in simulated_diarization(
-        "/home/shreyanshp/Projects/Dymensia/pipeline/2 people conversation.opus"
-    ):
+    audio_path = Path("./test_data/2 people conversation.opus")
+    for segment, name in simulated_diarization(str(audio_path)):
         print(segment, name)
 #
 # aseg = AudioSegmentation()

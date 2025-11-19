@@ -4,8 +4,8 @@ from multiprocessing import Process, Queue
 from typing import List
 
 
-from audio_diarization import simulated_diarization
-from audio_detect import AudioRecognizer
+from pipeline.audio_diarization import simulated_diarization
+from pipeline.audio_detect import AudioRecognizer
 
 
 def my_function(x: int) -> int:

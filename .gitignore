@@ -1,6 +1,11 @@
 **/.venv/**
+**/__pycache__/**
+
 known_faces/*
 !known_faces/.gitkeep
 
 known_voices/*
 !known_voices/.gitkeep
+
+backup/*
+

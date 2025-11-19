@@ -49,3 +49,12 @@ Path to the directory containing known face embeddings or images.
 Used for face recognition and identification in video processing.
 Each subdirectory may represent a known person with their face data.
 """
+
+VIDEO_THRESHOLD: float
+"""
+Cosine distance threshold for speaker identification matching.
+
+Embeddings with cosine distance below this threshold are considered matches
+to known speakers. Lower values (e.g., 0.3-0.4) are more strict, higher values
+(e.g., 0.5-0.6) are more lenient. Default: 0.45
+"""

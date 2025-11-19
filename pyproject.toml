@@ -1,0 +1,32 @@
+[project]
+name = "dymensia"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "aiofiles>=25.1.0",
+    "aiortc>=1.14.0",
+    "asyncio>=4.0.0",
+    "deepface>=0.0.95",
+    "fastapi>=0.121.2",
+    "faster-whisper>=1.2.1",
+    "numpy<2",
+    "openai-whisper>=20250625",
+    "pandas>=2.3.3",
+    "pyannote-audio==3.4",
+    "python-dotenv>=1.2.1",
+    "tf-keras>=2.18.0",
+    "torch==2.2.0",
+    "transformers>=4.57.1",
+    "typeguard==2.13",
+    "uvicorn>=0.38.0",
+]
+
+[dependency-groups]
+dev = [
+    "espnet>=202205",
+    "espnet-model-zoo>=0.1.7",
+    "pytest>=9.0.1",
+    "snakeviz>=2.2.2",
+]

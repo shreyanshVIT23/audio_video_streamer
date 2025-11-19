@@ -19,7 +19,7 @@ class AudioProcessor:
         self.aseg = AudioSegmentationFile()
         self.aem = AudioEmbedding()
         self.track = track
-        self.conversation = Path(r"./conversation.txt")
+        self.conversation = Path(r"./output/conversation.txt")
 
     async def process_audio(self):
         async with aiofiles.open(self.conversation, "a") as f:
@@ -62,7 +62,7 @@ class VideoProcessor:
         cv2.waitKey(1)
 
     async def process_video(self):
-        async with aiofiles.open("./all_people.txt", "a") as f:
+        async with aiofiles.open("./output/all_people.txt", "a") as f:
             prev_names = set()
             # async for frame in video_transformer(self.track):
             while self.recorder._running or self.recorder.track.readyState != "ended":
