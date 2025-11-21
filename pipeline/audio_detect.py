@@ -7,13 +7,13 @@ import time
 import torch
 import torchaudio
 
-from espnet_model_zoo.downloader import ModelDownloader
-
-from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+# from espnet_model_zoo.downloader import ModelDownloader
+#
+# from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 import string
 import soundfile as sf
 import librosa
-from espnet2.bin.asr_inference import Speech2Text
+# from espnet2.bin.asr_inference import Speech2Text
 
 """
 It is best to use faster whisper or openai whisper as they are far superior compared to others.
@@ -269,9 +269,9 @@ if __name__ == "__main__":
     ar = AudioRecognizer()
     path_to_audio = str(Path("./test_data/audio.wav"))
     models = {
-        "ESP2NET": ar.esp2net_model,
+        # "ESP2NET": ar.esp2net_model,
         "FAST WHISPER": ar.fast_whisper_model,
-        "WAV2VEC2 Claude": ar.wav2vec2_claude_model,
+        # "WAV2VEC2 Claude": ar.wav2vec2_claude_model,
         "OPENAI WHISPER": ar.whisper_model,
     }
 
